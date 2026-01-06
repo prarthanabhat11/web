@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Automate calls, bookings, and follow-ups with human-sounding AI voice agents. Perfect for coaches, clinics, and hospitality businesses.">
+    <title>AI Voice Agents for Business | Automate Your Calls</title>
+    <style>
+        /* 
+        --------------------------------------------------
+        1. CSS VARIABLES & RESET
+        --------------------------------------------------
+        */
+        :root {
+            --bg-body: #050510;
+            --bg-surface: #0f111a;
+            --bg-surface-hover: #161925;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #ec4899;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --border-hover: #334155;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --nav-height: 80px;
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+        
+        img, svg {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* 
+        --------------------------------------------------
+        2. UTILITIES & LAYOUT
+        --------------------------------------------------
+        */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .text-center { text-align: center; }
+        .text-gradient {
+            background: linear-gradient(135deg, var(--text-main) 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -0.02em; }
+        h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.01em; }
+        h3 { font-size: 1.5rem; }
+        p { color: var(--text-muted); font-size: 1.125rem; max-width: 60ch; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+
+        /* 
+        --------------------------------------------------
+        3. COMPONENTS
+        --------------------------------------------------
+        */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            font-weight: 600;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 35px -10px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-main);
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-hover);
+        }
+
+        /* 
+        --------------------------------------------------
+        4. NAVBAR
+        --------------------------------------------------
+        */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            z-index: 1000;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .navbar.scrolled {
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        .nav-links a {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-main); }
+        
+        .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .nav-actions { display: none; }
+        }
+
+        /* 
+        --------------------------------------------------
+        5. HERO SECTION
+        --------------------------------------------------
+        */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: var(--nav-height);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, rgba(5, 5, 16, 0) 70%);
+            z-index: -1;
+        }
+
+        /* Animated Waveform Background */
+        .waveform {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-repeat: no-repeat;
+            background-size: 200% 100%;
+            opacity: 0.3;
+            z-index: -1;
+            /* Simple CSS gradient waveform simulation */
+            background-image: linear-gradient(to right, 
+                var(--bg-body) 0%, 
+                transparent 20%, 
+                var(--primary) 50%, 
+                transparent 80%, 
+                var(--bg-body) 100%);
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+            animation: moveWave 10s linear infinite;
+        }
+
+        @keyframes moveWave {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* 
+        --------------------------------------------------
+        6. SECTIONS
+        --------------------------------------------------
+        */
+        /* Social Proof */
+        .social-proof {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 40px 0;
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .logos-grid {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            opacity: 0.6;
+        }
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        .icon-shape {
+            width: 24px;
+            height: 24px;
+            background: var(--text-muted);
+            border-radius: 4px;
+        }
+
+        /* Features/Grid Layouts */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        /* Problem Section */
+        .pain-point {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .pain-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Solution Section */
+        .feature-card {
+            background: var(--bg-surface);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* How It Works */
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 32px;
+            margin-top: 60px;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Dashed line connector for desktop */
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: repeating-linear-gradient(to right, var(--border) 0, var(--border) 10px, transparent 10px, transparent 20px);
+            z-index: -1;
+        }
+
+        .step-item {
+            flex: 1;
+            background: var(--bg-body);
+            padding: 0 16px;
+        }
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-surface);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .steps-container { flex-direction: column; }
+            .steps-container::before { display: none; }
+        }
+
+        /* Pricing */
+        .price-card {
+            display: flex;
+            flex-direction: column;
+            padding: 40px 32px;
+            text-align: center;
+        }
+        .price-card.featured {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, var(--bg-surface) 100%);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .price-title { font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 16px; }
+        .price-amount { font-size: 2.5rem; font-weight: 800; margin-bottom: 24px; color: white; }
+        .price-features { margin-bottom: 32px; text-align: left; }
+        .price-features li { padding: 8px 0; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .price-features li svg { color: var(--secondary); width: 18px; }
+
+        /* FAQ */
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            background: var(--bg-surface);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .faq-icon {
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 24px;
+            color: var(--text-muted);
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        .faq-item.active .faq-answer {
+            padding-bottom: 24px;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 60px 0 30px;
+            background: var(--bg-surface);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 { color: white; margin-bottom: 20px; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col a { color: var(--text-muted); }
+        .footer-col a:hover { color: var(--primary); }
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* SVG Icons Helper */
+        .icon-inline { width: 24px; height: 24px; }
+        
+    </style>
+</head>
+<body>
+
+    <!-- 
+    ==================================================
+    HEADER / NAVIGATION
+    ==================================================
+    -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="text-gradient">Voice</span><span class="text-gradient-primary">AI</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#use-cases">Use Cases</a>
+                <a href="#faq">FAQ</a>
+            </div>
+
+            <div class="nav-actions" style="display: flex; gap: 16px;">
+                 <a href="#contact" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.9rem;">Book Demo</a>
+            </div>
+
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- 
+    ==================================================
+    HERO SECTION
+    ==================================================
+    -->
+    <header class="hero">
+        <div class="waveform"></div>
+        <div class="container hero-content">
+            <h1 style="margin-bottom: 24px;">
+                Never Miss a Lead Again — Let an <span class="text-gradient-primary">AI Voice Agent</span> Handle Your Calls 24/7
+            </h1>
+            <p class="mx-auto" style="margin-bottom: 32px; font-size: 1.25rem;">
+                We help businesses and coaches automate calls, bookings, and follow-ups using human-sounding AI voice agents. Scale your operations without increasing headcount.
+            </p>
+            <div class="hero-btns">
+                <a href="#contact" class="btn btn-primary">Book a Free Demo</a>
+                <a href="#demo" class="btn btn-secondary">Hear the AI in Action ►</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 
+    ==================================================
+    SOCIAL PROOF
+    ==================================================
+    -->
+    <section class="social-proof">
+        <div class="container text-center">
+            <p style="margin-bottom: 24px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Trusted by Innovative Teams</p>
+            <div class="logos-grid">
+                <div class="logo-placeholder"><div class="icon-shape" style="border-radius: 50%;"></div> ClinicPlus</div>
+                <div class="logo-placeholder"><div class="icon-shape" style="transform: rotate(45deg);"></div> HotelLux</div>
+                <div class="logo-placeholder"><div class="icon-shape" style="width: 30px; height: 15px;"></div> CoachMasters</div>
+                <div class="logo-placeholder"><div class="icon-shape"></div> ServicePro</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    PROBLEM SECTION
+    ==================================================
+    -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2>Most Businesses <span style="color: #ef4444;">Lose Money</span> on Missed Calls</h2>
+                <p class="mx-auto">If you aren't answering instantly, your leads are going to competitors. Manual follow-up is slow, expensive, and unscalable.</p>
+            </div>
+
+            <div class="grid-4">
+                <div class="pain-point">
+                    <div class="pain-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h4>62% of Calls Go Unanswered</h4>
+                    <p style="font-size: 1rem;">From busy lines to after-hours, missed calls mean missed revenue opportunities every single day.</p>
+                </div>
+                <div class="pain-point">
+                    <div class="pain-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h4>Slow Response Time</h4>
+                    <p style="font-size: 1rem;">Leads go cold within 5 minutes. If you can't pick up immediately, you've likely lost the client.</p>
+                </div>
+                <div class="pain-point">
+                    <div class="pain-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <h4>High Staffing Costs</h4>
+                    <p style="font-size: 1rem;">Hiring receptionists or sales teams for 24/7 coverage is prohibitively expensive for most.</p>
+                </div>
+                <div class="pain-point">
+                    <div class="pain-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.172 16.172a4 4 0 015.656 0M9 10a9 9 0 019 9m-9-9a9 9 0 00-9 9m9-9H3m2 4L3 4m0 0h18"></path></svg>
+                    </div>
+                    <h4>Inconsistent Quality</h4>
+                    <p style="font-size: 1rem;">Human agents have bad days, forget scripts, or miss crucial details in the CRM.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    SOLUTION SECTION
+    ==================================================
+    -->
+    <section id="features" class="section-padding" style="background: var(--bg-surface);">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <p style="color: var(--primary); font-weight: 700; margin-bottom: 12px; text-transform: uppercase;">The Solution</p>
+                <h2>Meet Your <span class="text-gradient">AI Voice Agent</span></h2>
+                <p class="mx-auto">An intelligent, tireless employee that sounds human and works 24/7 to grow your business.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                    <h3>24/7 Call Answering</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Never let a call go to voicemail. Your agent is awake and ready to sell, even on holidays and weekends.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></div>
+                    <h3>Human-Like Conversations</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Powered by advanced LLMs, our agents understand context, nuance, and interruptions just like a real person.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+                    <h3>Instant Appointment Booking</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Integrated directly with your calendar (Calendly, Cal.com) to book meetings while on the phone.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg></div>
+                    <h3>Multilingual Support</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Speak to your customers in their native language. Our agents support 30+ languages fluently.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg></div>
+                    <h3>CRM & WhatsApp Integration</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Seamlessly sync call data to HubSpot or Salesforce and send automated WhatsApp follow-ups.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
+                    <h3>Analytics Dashboard</h3>
+                    <p style="font-size: 0.95rem; margin-top: 12px;">Track call volume, lead qualification rates, and average call duration in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    HOW IT WORKS
+    ==================================================
+    -->
+    <section id="how-it-works" class="section-padding">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2>How It Works</h2>
+                <p class="mx-auto">Go from zero to automated in under 24 hours.</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3>Understand</h3>
+                    <p>We analyze your business, FAQs, and booking flow to create a custom knowledge base.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3>Deploy</h3>
+                    <p>We configure the AI voice, tone, and integrations. You get a dedicated phone number.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3>Automate</h3>
+                    <p>Forward your calls to the AI. It handles inquiries, schedules appointments, and logs data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    USE CASES
+    ==================================================
+    -->
+    <section id="use-cases" class="section-padding" style="background: var(--bg-surface);">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2>Built for Your Industry</h2>
+            </div>
+            
+            <div class="grid-4">
+                <div class="card">
+                    <h4 style="color: var(--secondary)">Coaches & Consultants</h4>
+                    <p style="font-size: 0.95rem; margin-top: 10px;">Qualify leads and book discovery calls automatically while you focus on clients.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--secondary)">Hotels & Hospitality</h4>
+                    <p style="font-size: 0.95rem; margin-top: 10px;">Handle room service requests, FAQs about amenities, and booking modifications 24/7.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--secondary)">Clinics & Health</h4>
+                    <p style="font-size: 0.95rem; margin-top: 10px;">HIPAA-compliant appointment scheduling and patient reminders without front-desk overload.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--secondary)">Local Services</h4>
+                    <p style="font-size: 0.95rem; margin-top: 10px;">Plumbers, HVAC, and Roofers: Capture every emergency job even when you're on site.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    WHY CHOOSE US
+    ==================================================
+    -->
+    <section class="section-padding">
+        <div class="container">
+            <div style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(236,72,153,0.1) 100%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 48px; text-align: center;">
+                <h2 style="margin-bottom: 24px;">Why Choose Us?</h2>
+                <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+                    <p style="font-size: 1.1rem; color: var(--text-main);">We aren't just a software wrapper. We are automation experts who understand business workflows.</p>
+                    <p style="font-size: 1.1rem; color: var(--text-main);">Our agents are fine-tuned for <span style="color: var(--primary); font-weight: 700;">empathy and conversion</span>, ensuring your brand reputation stays premium. We handle the technical setup so you can focus on revenue.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    PRICING
+    ==================================================
+    -->
+    <section id="pricing" class="section-padding" style="background: var(--bg-surface);">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2>Simple Pricing</h2>
+                <p>No hidden fees. Scale as you grow.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card price-card">
+                    <div class="price-title">Starter</div>
+                    <div class="price-amount">$99<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
+                    <ul class="price-features">
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> 500 Minutes/mo</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Standard Voice</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Email Support</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+                </div>
+
+                <div class="card price-card featured">
+                    <div class="price-title">Growth</div>
+                    <div class="price-amount">$249<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
+                    <ul class="price-features">
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> 2000 Minutes/mo</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Premium Human Voices</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> CRM Integration</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" style="width: 100%;">Get Started</a>
+                </div>
+
+                <div class="card price-card">
+                    <div class="price-title">Custom</div>
+                    <div class="price-amount">Contact</div>
+                    <ul class="price-features">
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Unlimited Minutes</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Custom LLM Training</li>
+                        <li><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Dedicated Account Manager</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%;">Get Custom Pricing</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    FAQ SECTION
+    ==================================================
+    -->
+    <section id="faq" class="section-padding">
+        <div class="container" style="max-width: 800px;">
+            <div class="text-center" style="margin-bottom: 50px;">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Does the AI sound robotic?
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Not at all. We use the latest ultra-low latency voice models that include breath pauses, fillers (like "umm", "uh-huh"), and emotional intonation. Most callers cannot distinguish it from a human.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Can it integrate with my calendar?
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! We integrate natively with Calendly, Cal.com, Google Calendar, and Outlook to check availability and book slots in real-time while on the call.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        What happens if the AI doesn't know the answer?
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can set custom fallback rules. The AI can be instructed to politely take a message, offer a callback, or forward the call to a human supervisor immediately.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Is it easy to set up?
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Extremely. Our "Deploy" step takes less than 24 hours. We handle the knowledge base training and phone number provisioning. You just provide the business details.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        How much does it cost?
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We offer flexible plans starting at $99/mo. Contact us for a custom quote based on your call volume and integration needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    FINAL CTA
+    ==================================================
+    -->
+    <section id="contact" class="section-padding" style="position: relative; overflow: hidden;">
+        <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(0deg, rgba(99,102,241,0.2) 0%, rgba(5,5,16,0) 100%); z-index: -1;"></div>
+        <div class="container text-center">
+            <h2 style="font-size: 3rem; margin-bottom: 24px;">Ready to Automate Your Calls?</h2>
+            <p class="mx-auto" style="margin-bottom: 40px;">Join 500+ businesses saving time and closing more deals with Voice AI.</p>
+            <a href="#" class="btn btn-primary" style="padding: 20px 48px; font-size: 1.25rem;">Book a Free Demo Call</a>
+        </div>
+    </section>
+
+    <!-- 
+    ==================================================
+    FOOTER
+    ==================================================
+    -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 class="logo" style="font-size: 1.2rem;">VoiceAI</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Bringing the power of conversational AI to businesses everywhere.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#">hello@voiceai.com</a></li>
+                        <li><a href="#">+1 (555) 123-4567</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 VoiceAI Inc. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+    ==================================================
+    JAVASCRIPT
+    ==================================================
+    -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. FAQ Accordion Logic
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const questionBtn = item.querySelector('.faq-question');
+                
+                questionBtn.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all other items
+                    faqItems.forEach(otherItem => {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                        otherItem.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    });
+
+                    // Toggle current item
+                    if (!isActive) {
+                        item.classList.add('active');
+                        const answer = item.querySelector('.faq-answer');
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        item.querySelector('.faq-icon').style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // 2. Sticky Navbar Effect on Scroll
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // 3. Smooth Scroll for Anchor Links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Offset for fixed header
+                        const headerOffset = 80;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+            
+            // 4. Mobile Menu Toggle (Simple)
+            // Note: For a real production app, we'd add a slide-out menu. 
+            // Here we'll just toggle the nav links visibility for simplicity/single-file constraint.
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            const navActions = document.querySelector('.nav-actions');
+
+            mobileBtn.addEventListener('click', () => {
+                const isHidden = window.getComputedStyle(navLinks).display === 'none';
+                if(isHidden) {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '80px';
+                    navLinks.style.left = '0';
+                    navLinks.style.width = '100%';
+                    navLinks.style.background = '#0f111a'; // bg-surface
+                    navLinks.style.padding = '20px';
+                    navLinks.style.borderBottom = '1px solid #1e293b';
+                } else {
+                    navLinks.style.display = ''; // revert to CSS default
+                    navLinks.style.position = '';
+                    navLinks.style.width = '';
+                    navLinks.style.background = '';
+                    navLinks.style.padding = '';
+                    navLinks.style.borderBottom = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
